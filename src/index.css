@@ -71,6 +71,7 @@ code {
   display: inline-block;
   flex: none;
   font-size: 0.875rem;
+  cursor: pointer;
 }
 
 .rollResultTime {
@@ -88,6 +89,13 @@ code {
 
 .rollResultSymbol:first-of-type {
   margin-top: 6px;
+}
+
+.rollResultEmpty {
+  margin-top: 6px;
+  font-size: 0.85em;
+  font-style: italic;
+  opacity: 0.6;
 }
 
 .rollResultSymbol .symbolName {

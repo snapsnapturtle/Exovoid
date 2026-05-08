@@ -31,6 +31,20 @@ function capitalize(s: string): string {
     return s.length === 0 ? s : s[0].toUpperCase() + s.slice(1);
 }
 
+const SYMBOL_ORDER = [
+    'botch', 'success', 'complication', 'trigger',
+    'wound', 'minion', 'cyberware', 'adrenaline',
+    'xp',
+];
+
+function orderSymbols(summary: Record<string, number>): string[] {
+    return Object.keys(summary).sort((a, b) => {
+        const ia = SYMBOL_ORDER.indexOf(a);
+        const ib = SYMBOL_ORDER.indexOf(b);
+        return (ia === -1 ? SYMBOL_ORDER.length : ia) - (ib === -1 ? SYMBOL_ORDER.length : ib);
+    });
+}
+
 export function summarize(result: DiceResultType): Record<string, number> {
     const summary: Record<string, number> = {};
 
@@ -83,11 +97,13 @@ export function RollResult({onRoll}: RollResultProps) {
             <span className="rollResultTime" title={new Date(roll.timestamp).toLocaleString()}>
                 {relativeTime(roll.timestamp, now)}
             </span>
-            {Object.keys(roll.summary).map(s => <div key={roll.id+"-"+s} className="rollResultSymbol">
-                <img src={`/img/symbols/${s}.png`} alt={s} width={16} height={16} />
-                <span className="symbolName">{capitalize(s)}</span>
-                <span className="symbolCount">×{roll.summary[s]}</span>
-            </div>)}
+            {Object.keys(roll.summary).length === 0
+                ? <div className="rollResultEmpty">No symbols</div>
+                : orderSymbols(roll.summary).map(s => <div key={roll.id+"-"+s} className="rollResultSymbol">
+                    <img src={`/img/symbols/${s}.png`} alt={s} width={16} height={16} />
+                    <span className="symbolName">{capitalize(s)}</span>
+                    <span className="symbolCount">×{roll.summary[s]}</span>
+                </div>)}
         </Paper>)}
 
         <Modal open={details !== null} onClose={() => setDetails(null)}>
